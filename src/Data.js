@@ -1,6 +1,6 @@
 export const tops = [
   { id: "t1", name: "Camiseta Branca", img: "/img/tops/camisa-preta.png", color: "branco" },
-  { id: "t2", name: "Camisa Azul", img: "/img/tops/camisa-azul.png", color: "azul" },
+  { id: "t2", name: "Camisa Verde", img: "/img/tops/camisa-verde-musgo.png", color: "verde" },
   { id: "t3", name: "Jaqueta Preta", img: "/img/tops/jaqueta-preta.png", color: "preto" },
   { id: "t4", name: "Jaqueta Sarja", img: "/img/tops/jaqueta-sarja-areia.png", color: "areia" },
 ];
@@ -8,6 +8,6 @@ export const tops = [
 export const bottoms = [
   { id: "b1", name: "Jeans Azul", img: "/img/bottoms/jeans-azul.png", color: "azul" },
   { id: "b2", name: "Jeans Preto", img: "/img/bottoms/jeans-preto.png", color: "preto" },
-  { id: "b3", name: "Short Bege", img: "/img/bottoms/short-bege.png", color: "bege" },
+  { id: "b3", name: "Jogger Bege", img: "/img/bottoms/calca-jogger.png", color: "bege" },
   { id: "b4", name: "Calça de Moletom Cinza", img: "/img/bottoms/calca-cinza.png", color: "cinza" },
 ];

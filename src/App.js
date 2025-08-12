@@ -11,24 +11,24 @@ const tonsDePeleIBGE = [
 
 const sugestoesPorCorPele = {
   branco: {
-    topColors: ["preto", "azul", "areia"],
+    topColors: ["preto", "verde", "areia"],
     bottomColors: ["preto", "azul", "cinza"],
   },
   pardo: {
-    topColors: ["branco", "areia", "azul"],
-    bottomColors: ["bege", "azul", "cinza"],
+    topColors: ["branco", "areia", "verde"],
+    bottomColors: ["bege", "verde", "cinza"],
   },
   preto: {
-    topColors: ["branco", "azul", "areia"],
+    topColors: ["branco", "verde", "areia"],
     bottomColors: ["preto", "bege", "cinza"],
   },
   amarelo: {
-    topColors: ["preto", "azul", "branco"],
+    topColors: ["preto", "verde", "branco"],
     bottomColors: ["bege", "cinza", "preto"],
   },
   indigena: {
-    topColors: ["areia", "azul", "bege"],
-    bottomColors: ["bege", "cinza", "azul"],
+    topColors: ["areia", "verde", "bege"],
+    bottomColors: ["bege", "cinza", "verde"],
   },
 };
 
