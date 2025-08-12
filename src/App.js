@@ -20,7 +20,7 @@ const sugestoesPorCorPele = {
   },
   preto: {
     topColors: ["branco", "azul", "areia"],
-    bottomColors: ["preto", "azul", "cinza"],
+    bottomColors: ["preto", "bege", "cinza"],
   },
   amarelo: {
     topColors: ["preto", "azul", "branco"],
@@ -43,33 +43,65 @@ export default function App() {
     return combos;
   }, []);
 
-  const [currentComboIndex, setCurrentComboIndex] = useState(0);
-
-  function proximaCombinacao() {
-    setCurrentComboIndex((i) => (i + 1) % allCombinations.length);
-  }
+  // Guarda o tom de pele selecionado
+  const [selectedSkinTone, setSelectedSkinTone] = useState(null);
+  // Índice para a combinação atual dentro das combinações do tom selecionado
+  const [comboIndexBySkinTone, setComboIndexBySkinTone] = useState({});
 
   function escolherLookPorPele(corPele) {
     const sugestao = sugestoesPorCorPele[corPele];
     if (!sugestao) return;
 
+    // Filtra as combinações válidas para o tom
     const combinacoesFiltradas = allCombinations.filter(
       ({ top, bottom }) =>
         sugestao.topColors.includes(top.color) &&
         sugestao.bottomColors.includes(bottom.color)
     );
 
-    if (combinacoesFiltradas.length > 0) {
-      const index = allCombinations.findIndex(
-        (combo) =>
-          combo.top.id === combinacoesFiltradas[0].top.id &&
-          combo.bottom.id === combinacoesFiltradas[0].bottom.id
-      );
-      if (index >= 0) setCurrentComboIndex(index);
+    if (combinacoesFiltradas.length === 0) return;
+
+    // Pega índice atual para esse tom
+    const atualIndex = comboIndexBySkinTone[corPele] ?? -1;
+    // Próximo índice (loop)
+    const proximoIndex = (atualIndex + 1) % combinacoesFiltradas.length;
+
+    // Atualiza estado do índice por tom de pele
+    setComboIndexBySkinTone({
+      ...comboIndexBySkinTone,
+      [corPele]: proximoIndex,
+    });
+
+    // Atualiza tom de pele selecionado
+    setSelectedSkinTone(corPele);
+  }
+
+  // Combinação atual, baseado no tom e índice
+  let selectedTop = null;
+  let selectedBottom = null;
+
+  if (selectedSkinTone) {
+    const sugestao = sugestoesPorCorPele[selectedSkinTone];
+    const combinacoesFiltradas = allCombinations.filter(
+      ({ top, bottom }) =>
+        sugestao.topColors.includes(top.color) &&
+        sugestao.bottomColors.includes(bottom.color)
+    );
+
+    const idx = comboIndexBySkinTone[selectedSkinTone] ?? 0;
+    const comboAtual = combinacoesFiltradas[idx];
+
+    if (comboAtual) {
+      selectedTop = comboAtual.top;
+      selectedBottom = comboAtual.bottom;
     }
   }
 
-  const { top: selectedTop, bottom: selectedBottom } = allCombinations[currentComboIndex];
+  // Fallback: mostra primeira combinação geral se nada selecionado ainda
+  if (!selectedTop || !selectedBottom) {
+    selectedTop = tops[0];
+    selectedBottom = bottoms[0];
+  }
 
   return (
     <div style={{ padding: 20, fontFamily: "Arial, sans-serif" }}>
@@ -87,25 +119,11 @@ export default function App() {
               border: "2px solid #333",
               backgroundColor: color,
               cursor: "pointer",
+              outline:
+                selectedSkinTone === id ? "3px solid #4caf50" : "none",
             }}
           />
         ))}
-
-        <button
-          onClick={proximaCombinacao}
-          style={{
-            marginLeft: 30,
-            padding: "8px 16px",
-            backgroundColor: "#4caf50",
-            color: "white",
-            border: "none",
-            borderRadius: 4,
-            cursor: "pointer",
-            height: 40,
-          }}
-        >
-          Próxima combinação
-        </button>
       </div>
 
       <div>
