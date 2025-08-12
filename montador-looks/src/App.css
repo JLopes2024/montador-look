@@ -1,0 +1,72 @@
+.app {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  text-align: center;
+}
+
+.preview-area {
+  margin: 20px 0;
+}
+
+.preview-card {
+  position: relative;
+  width: 200px;
+  height: 300px;
+  margin: auto;
+  background: #f0f0f0;
+  border-radius: 8px;
+}
+
+.preview-card img {
+  position: absolute;
+  width: 100%;
+  height: auto;
+}
+
+.top-img {
+  top: 0;
+}
+
+.bottom-img {
+  bottom: 0;
+}
+
+.selectors {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.selector {
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.selector-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.item-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: white;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.item-card img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.item-card.selected {
+  border: 2px solid blue;
+}
+
+.item-name {
+  font-size: 12px;
+}
