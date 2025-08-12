@@ -43,16 +43,16 @@ export default function App() {
     return combos;
   }, []);
 
-  // Guarda o tom de pele selecionado
   const [selectedSkinTone, setSelectedSkinTone] = useState(null);
-  // Índice para a combinação atual dentro das combinações do tom selecionado
   const [comboIndexBySkinTone, setComboIndexBySkinTone] = useState({});
+
+  // Estados para combinação aleatória
+  const [randomCombo, setRandomCombo] = useState(null);
 
   function escolherLookPorPele(corPele) {
     const sugestao = sugestoesPorCorPele[corPele];
     if (!sugestao) return;
 
-    // Filtra as combinações válidas para o tom
     const combinacoesFiltradas = allCombinations.filter(
       ({ top, bottom }) =>
         sugestao.topColors.includes(top.color) &&
@@ -61,26 +61,32 @@ export default function App() {
 
     if (combinacoesFiltradas.length === 0) return;
 
-    // Pega índice atual para esse tom
     const atualIndex = comboIndexBySkinTone[corPele] ?? -1;
-    // Próximo índice (loop)
     const proximoIndex = (atualIndex + 1) % combinacoesFiltradas.length;
 
-    // Atualiza estado do índice por tom de pele
     setComboIndexBySkinTone({
       ...comboIndexBySkinTone,
       [corPele]: proximoIndex,
     });
 
-    // Atualiza tom de pele selecionado
     setSelectedSkinTone(corPele);
+    setRandomCombo(null); // limpa random ao escolher tom
   }
 
-  // Combinação atual, baseado no tom e índice
+  function escolherLookAleatorio() {
+    const topAleatorio = tops[Math.floor(Math.random() * tops.length)];
+    const bottomAleatorio = bottoms[Math.floor(Math.random() * bottoms.length)];
+    setRandomCombo({ top: topAleatorio, bottom: bottomAleatorio });
+    setSelectedSkinTone(null); // limpa seleção de tom
+  }
+
   let selectedTop = null;
   let selectedBottom = null;
 
-  if (selectedSkinTone) {
+  if (randomCombo) {
+    selectedTop = randomCombo.top;
+    selectedBottom = randomCombo.bottom;
+  } else if (selectedSkinTone) {
     const sugestao = sugestoesPorCorPele[selectedSkinTone];
     const combinacoesFiltradas = allCombinations.filter(
       ({ top, bottom }) =>
@@ -97,7 +103,6 @@ export default function App() {
     }
   }
 
-  // Fallback: mostra primeira combinação geral se nada selecionado ainda
   if (!selectedTop || !selectedBottom) {
     selectedTop = tops[0];
     selectedBottom = bottoms[0];
@@ -106,7 +111,7 @@ export default function App() {
   return (
     <div style={{ padding: 20, fontFamily: "Arial, sans-serif" }}>
       <h1>Escolha seu tom de pele (IBGE)</h1>
-      <div style={{ marginBottom: 20, display: "flex", gap: 15 }}>
+      <div style={{ marginBottom: 20, display: "flex", gap: 15, alignItems: "center" }}>
         {tonsDePeleIBGE.map(({ id, label, color }) => (
           <button
             key={id}
@@ -119,11 +124,27 @@ export default function App() {
               border: "2px solid #333",
               backgroundColor: color,
               cursor: "pointer",
-              outline:
-                selectedSkinTone === id ? "3px solid #4caf50" : "none",
+              outline: selectedSkinTone === id ? "3px solid #4caf50" : "none",
             }}
           />
         ))}
+
+        <button
+          onClick={escolherLookAleatorio}
+          style={{
+            marginLeft: 30,
+            padding: "8px 16px",
+            backgroundColor: "#2196f3",
+            color: "white",
+            border: "none",
+            borderRadius: 4,
+            cursor: "pointer",
+            height: 40,
+          }}
+          title="Combinação Aleatória"
+        >
+          Surpreenda-me!
+        </button>
       </div>
 
       <div>
