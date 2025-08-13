@@ -1,6 +1,8 @@
+// Importações necessárias
 import React, { useState, useMemo } from "react";
-import { tops, bottoms } from "./Data";
+import { tops, bottoms } from "./Data"; // Arrays com peças superiores e inferiores
 
+// Lista de tons de pele (baseada no IBGE) com cor para visualização
 const tonsDePeleIBGE = [
   { id: "branco", label: "Branco", color: "#f5d6c6" },
   { id: "pardo", label: "Pardo", color: "#c68642" },
@@ -9,6 +11,7 @@ const tonsDePeleIBGE = [
   { id: "indigena", label: "Indígena", color: "#a97454" },
 ];
 
+// Sugestões de cores de roupas para cada tom de pele
 const sugestoesPorCorPele = {
   branco: {
     topColors: ["preto", "verde", "areia"],
@@ -33,6 +36,7 @@ const sugestoesPorCorPele = {
 };
 
 export default function App() {
+  // Cria todas as combinações possíveis de top + bottom (usando useMemo para evitar recálculo)
   const allCombinations = useMemo(() => {
     const combos = [];
     for (let top of tops) {
@@ -43,16 +47,21 @@ export default function App() {
     return combos;
   }, []);
 
+  // Estado para guardar o tom de pele selecionado
   const [selectedSkinTone, setSelectedSkinTone] = useState(null);
+
+  // Guarda qual índice de combinação foi usado para cada tom de pele (para ir alternando)
   const [comboIndexBySkinTone, setComboIndexBySkinTone] = useState({});
 
-  // Estados para combinação aleatória
+  // Guarda a combinação aleatória escolhida
   const [randomCombo, setRandomCombo] = useState(null);
 
+  // Função para escolher um look baseado no tom de pele
   function escolherLookPorPele(corPele) {
     const sugestao = sugestoesPorCorPele[corPele];
     if (!sugestao) return;
 
+    // Filtra apenas as combinações que atendem às cores recomendadas
     const combinacoesFiltradas = allCombinations.filter(
       ({ top, bottom }) =>
         sugestao.topColors.includes(top.color) &&
@@ -61,32 +70,40 @@ export default function App() {
 
     if (combinacoesFiltradas.length === 0) return;
 
+    // Descobre qual é o próximo índice (para alternar looks a cada clique)
     const atualIndex = comboIndexBySkinTone[corPele] ?? -1;
     const proximoIndex = (atualIndex + 1) % combinacoesFiltradas.length;
 
+    // Atualiza o índice e define o tom selecionado
     setComboIndexBySkinTone({
       ...comboIndexBySkinTone,
       [corPele]: proximoIndex,
     });
 
     setSelectedSkinTone(corPele);
-    setRandomCombo(null); // limpa random ao escolher tom
+    setRandomCombo(null); // Limpa o look aleatório
   }
 
+  // Função para escolher um look completamente aleatório
   function escolherLookAleatorio() {
     const topAleatorio = tops[Math.floor(Math.random() * tops.length)];
-    const bottomAleatorio = bottoms[Math.floor(Math.random() * bottoms.length)];
+    const bottomAleatorio =
+      bottoms[Math.floor(Math.random() * bottoms.length)];
     setRandomCombo({ top: topAleatorio, bottom: bottomAleatorio });
-    setSelectedSkinTone(null); // limpa seleção de tom
+    setSelectedSkinTone(null); // Limpa seleção de tom de pele
   }
 
+  // Variáveis para guardar o top e bottom selecionados
   let selectedTop = null;
   let selectedBottom = null;
 
+  // Se for aleatório, usa o randomCombo
   if (randomCombo) {
     selectedTop = randomCombo.top;
     selectedBottom = randomCombo.bottom;
-  } else if (selectedSkinTone) {
+  }
+  // Se for por tom de pele, pega a combinação filtrada
+  else if (selectedSkinTone) {
     const sugestao = sugestoesPorCorPele[selectedSkinTone];
     const combinacoesFiltradas = allCombinations.filter(
       ({ top, bottom }) =>
@@ -103,15 +120,26 @@ export default function App() {
     }
   }
 
+  // Se nada foi escolhido, mostra a primeira peça de cada lista
   if (!selectedTop || !selectedBottom) {
     selectedTop = tops[0];
     selectedBottom = bottoms[0];
   }
 
+  // Renderização do aplicativo
   return (
     <div style={{ padding: 20, fontFamily: "Arial, sans-serif" }}>
       <h1>Escolha seu tom de pele (IBGE)</h1>
-      <div style={{ marginBottom: 20, display: "flex", gap: 15, alignItems: "center" }}>
+
+      {/* Botões para seleção de tom de pele */}
+      <div
+        style={{
+          marginBottom: 20,
+          display: "flex",
+          gap: 15,
+          alignItems: "center",
+        }}
+      >
         {tonsDePeleIBGE.map(({ id, label, color }) => (
           <button
             key={id}
@@ -124,11 +152,13 @@ export default function App() {
               border: "2px solid #333",
               backgroundColor: color,
               cursor: "pointer",
-              outline: selectedSkinTone === id ? "3px solid #4caf50" : "none",
+              outline:
+                selectedSkinTone === id ? "3px solid #4caf50" : "none",
             }}
           />
         ))}
 
+        {/* Botão para look aleatório */}
         <button
           onClick={escolherLookAleatorio}
           style={{
@@ -147,20 +177,34 @@ export default function App() {
         </button>
       </div>
 
+      {/* Exibição do look selecionado */}
       <div>
         <h2>Look sugerido:</h2>
+
+        {/* Parte superior */}
         <div>
           <p>
-            <strong>Parte superior:</strong> {selectedTop.name} ({selectedTop.color})
+            <strong>Parte superior:</strong> {selectedTop.name} (
+            {selectedTop.color})
           </p>
-          <img src={selectedTop.img} alt={selectedTop.name} width={150} />
+          <img
+            src={selectedTop.img}
+            alt={selectedTop.name}
+            width={150}
+          />
         </div>
 
+        {/* Parte inferior */}
         <div style={{ marginTop: 20 }}>
           <p>
-            <strong>Parte inferior:</strong> {selectedBottom.name} ({selectedBottom.color})
+            <strong>Parte inferior:</strong> {selectedBottom.name} (
+            {selectedBottom.color})
           </p>
-          <img src={selectedBottom.img} alt={selectedBottom.name} width={150} />
+          <img
+            src={selectedBottom.img}
+            alt={selectedBottom.name}
+            width={150}
+          />
         </div>
       </div>
     </div>
